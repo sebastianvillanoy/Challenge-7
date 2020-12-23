@@ -46,3 +46,51 @@ WHERE (de.to_date = '9999-01-01')
 AND (e.birth_date BETWEEN '1965-01-01' AND '1965-12-31')
 ORDER BY e.emp_no, t.to_date DESC;
 
+-- Additional Queries
+
+-- There are 90398 current employees born between '1952-01-01' AND '1955-12-31' who are retiring.
+SELECT SUM (count) 
+FROM retiring_titles;
+
+-- Group the retiring employees by department
+-- Results indicate that Development, Production, and Sales are the top 3 departments that will have the most number of job vacancies
+
+SELECT DISTINCT ON(ut.emp_no) ut.emp_no, de.dept_no
+INTO ret_empno_depno
+FROM unique_titles as ut
+INNER JOIN dept_emp as de
+ON ut.emp_no = de.emp_no
+ORDER BY ut.emp_no, de.to_date DESC; 
+
+SELECT d.dept_name, COUNT(red.emp_no)
+FROM ret_empno_depno as red
+INNER JOIN departments as d
+ON red.dept_no = d.dept_no
+GROUP BY d.dept_name
+ORDER BY COUNT(red.emp_no) DESC; 
+
+-- Count the number of employees on the mentorship_eligibility table
+-- There are 1549 retirement-ready employees qualified to mentor the next generation of Pewlett Hackard employees
+SELECT COUNT(emp_no) 
+FROM mentorship_eligibility;
+
+-- Group the qualifying mentors by department
+-- Results indicate that Development, Production, and Sales are the top 3 departments that will have the most number of mentors
+
+SELECT DISTINCT ON (me.emp_no) me.emp_no, de.dept_no
+INTO ment_empno_depno
+FROM mentorship_eligibility as me
+INNER JOIN dept_emp as de
+ON me.emp_no= de.emp_no 
+ORDER BY me.emp_no, de.to_date DESC; 
+
+SELECT d.dept_name, COUNT(med.emp_no)
+FROM ment_empno_depno as med
+INNER JOIN departments as d
+ON med.dept_no = d.dept_no
+GROUP BY d.dept_name
+ORDER BY COUNT(med.emp_no) DESC;
+
+
+
+
