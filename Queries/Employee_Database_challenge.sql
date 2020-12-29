@@ -70,9 +70,16 @@ GROUP BY d.dept_name
 ORDER BY COUNT(red.emp_no) DESC; 
 
 -- Count the number of employees on the mentorship_eligibility table
--- There are 1549 retirement-ready employees qualified to mentor the next generation of Pewlett Hackard employees
+-- There are 1,549 retirement-ready current employees born between January 1, 1965 and December 31, 1965 who are qualified to mentor the next generation of employees. 
 SELECT COUNT(emp_no) 
 FROM mentorship_eligibility;
+
+-- Group the mentorship_eligible table by titles
+-- The top 3 titles/roles held by these 1,549 qualified mentors are Senior Staff, Senior Engineer and Engineer
+SELECT COUNT(emp_no), title
+FROM mentorship_eligibility
+GROUP BY title
+ORDER BY COUNT(emp_no) DESC;
 
 -- Group the qualifying mentors by department
 -- Results indicate that Development, Production, and Sales are the top 3 departments that will have the most number of mentors
